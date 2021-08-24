@@ -44,11 +44,11 @@ public class LexicalAnalyzer {
             else if (punctuations.contains(lexeme)) {
                 System.out.println(lexeme + " is a punctuation of " + lexeme.length() + " character" + (lexeme.length() > 1 ? "s." : '.'));
             }
-            else if (isRealNumberLiteral(lexeme)) {
-                System.out.println(lexeme + " is a real number literal of " + lexeme.length() + " character" + (lexeme.length() > 1 ? "s." : '.'));
-            }
             else if (isIntegerNumberLiteral(lexeme)) {
                 System.out.println(lexeme + " is an integer number literal of " + lexeme.length() + " character" + (lexeme.length() > 1 ? "s." : '.'));
+            }
+            else if (isRealNumberLiteral(lexeme)) {
+                System.out.println(lexeme + " is a real number literal of " + lexeme.length() + " character" + (lexeme.length() > 1 ? "s." : '.'));
             }
             else if (isStringLiteral(lexeme)) {
                 System.out.println(lexeme + " is a string literal of " + lexeme.length() + " character" + (lexeme.length() > 1 ? "s." : '.'));

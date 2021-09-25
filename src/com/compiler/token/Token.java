@@ -1,9 +1,9 @@
 package com.compiler.token;
 
 public class Token {
-    String type;
-    Object value;
-    int atLine;
+    public String type;
+    public Object value;
+    public int atLine;
 
     public Token(String type, Object value, int atLine) {
         this.type = type;

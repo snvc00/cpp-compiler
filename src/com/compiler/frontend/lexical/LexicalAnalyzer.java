@@ -10,24 +10,6 @@ public class LexicalAnalyzer {
     private final HashSet<String> keywords;
     private final HashSet<String> operators;
     private final HashSet<String> punctuations;
-    public final String[] acceptedKeywords = new String[]{
-            "void",
-            "bool",
-            "char",
-            "int",
-            "float",
-            "double",
-            "for",
-            "while",
-            "if",
-            "else",
-            "break",
-            "return",
-            "true",
-            "false"
-    };
-    public final String[] acceptedOperators = new String[] {"+", "-", "*", "/", "%", "=", "<", ">", "<=", ">=", "==", "!=", "&&", "||", "!"};
-    public final String[] acceptedPunctuations = new String[] {"{", "}", "(", ")", "[", "]", ";" };
     public LinkedList<Token> tokens;
     public boolean error;
 
@@ -38,15 +20,15 @@ public class LexicalAnalyzer {
 
         // Keywords
         keywords = new HashSet<>();
-        keywords.addAll(Arrays.asList(this.acceptedKeywords));
+        keywords.addAll(Arrays.asList(new String[]{"void", "bool", "char", "int", "float", "double", "for", "while", "if", "else", "break", "return", "true", "false"}));
 
         // Operators (arithmetical, assignment, relational, logical)
         operators = new HashSet<>();
-        operators.addAll(Arrays.asList(this.acceptedOperators));
+        operators.addAll(Arrays.asList(new String[]{"+", "-", "*", "/", "%", "=", "<", ">", "<=", ">=", "==", "!=", "&&", "||"}));
 
         // Punctuations
         punctuations = new HashSet<>();
-        punctuations.addAll(Arrays.asList(this.acceptedPunctuations));
+        punctuations.addAll(Arrays.asList(new String[]{"{", "}", "(", ")", "[", "]", ";"}));
     }
 
     public void analyze() {
@@ -63,7 +45,7 @@ public class LexicalAnalyzer {
                     tokens.add(new Token(lexemes[j], null, currentLine));
                 }
                 else if (isInteger(lexemes[j])) {
-                    tokens.add(new Token("NUMBER", Integer.parseInt(lexemes[j]), currentLine));
+                    tokens.add(new Token("INTEGER", Integer.parseInt(lexemes[j]), currentLine));
                 }
                 else if (isReal(lexemes[j])) {
                     tokens.add(new Token("REAL", Double.parseDouble(lexemes[j]), currentLine));

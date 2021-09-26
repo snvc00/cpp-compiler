@@ -5,6 +5,7 @@ import com.compiler.frontend.syntax.SyntaxAnalyzer;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -12,7 +13,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // Open file and add all the lines of code in a list
-        Scanner scanner = new Scanner(new FileReader("C:\\Users\\snvc0\\Documents\\Repositories\\cpp-compiler\\main.cpm"));
+        Path sourceFilePath = Path.of("main.lang");
+        Scanner scanner = new Scanner(new FileReader(sourceFilePath.toAbsolutePath().toString()));
         LinkedList<String> sourceFile = new LinkedList<>();
         while (scanner.hasNextLine()) {
             sourceFile.add(scanner.nextLine());

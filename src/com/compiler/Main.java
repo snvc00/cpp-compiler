@@ -2,10 +2,12 @@ package com.compiler;
 
 import com.compiler.frontend.lexical.LexicalAnalyzer;
 import com.compiler.frontend.syntax.SyntaxAnalyzer;
+import com.compiler.frontend.semantic.SemanticAnalyzer;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -39,5 +41,13 @@ public class Main {
             return;
         }
         System.out.print("\033[1m\033[32mSyntax analysis completed with no errors\033[0m\n");
+
+        // Run semantic analysis and check if there was an error
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(new ArrayList<>(lexicalAnalyzer.tokens), lexicalAnalyzer.declaredVariables);
+        semanticAnalyzer.analyze();
+        if (semanticAnalyzer.error) {
+            return;
+        }
+        System.out.print("\033[1m\033[32mSemantic analysis completed with no errors\033[0m\n");
     }
 }

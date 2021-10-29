@@ -11,24 +11,26 @@ public class LexicalAnalyzer {
     private final HashSet<String> operators;
     private final HashSet<String> punctuations;
     public LinkedList<Token> tokens;
+    public HashMap<String, String> declaredVariables;
     public boolean error;
 
     public LexicalAnalyzer(LinkedList<String> sourceFile) {
         this.sourceFile = sourceFile.toArray(new String[0]);
         this.tokens = new LinkedList<>();
+        this.declaredVariables = new HashMap<>();
         this.error = false;
 
         // Keywords
         keywords = new HashSet<>();
-        keywords.addAll(Arrays.asList(new String[]{"void", "bool", "char", "int", "float", "double", "for", "while", "if", "else", "break", "return", "true", "false"}));
+        keywords.addAll(Arrays.asList("void", "bool", "char", "int", "float", "double", "string", "for", "while", "if", "else", "break", "return", "true", "false"));
 
         // Operators (arithmetical, assignment, relational, logical)
         operators = new HashSet<>();
-        operators.addAll(Arrays.asList(new String[]{"+", "-", "*", "/", "%", "=", "<", ">", "<=", ">=", "==", "!=", "&&", "||"}));
+        operators.addAll(Arrays.asList("+", "-", "*", "/", "%", "=", "<", ">", "<=", ">=", "==", "!=", "&&", "||"));
 
         // Punctuations
         punctuations = new HashSet<>();
-        punctuations.addAll(Arrays.asList(new String[]{"{", "}", "(", ")", "[", "]", ";"}));
+        punctuations.addAll(Arrays.asList("{", "}", "(", ")", "[", "]", ";"));
     }
 
     public void analyze() {
@@ -39,10 +41,13 @@ public class LexicalAnalyzer {
             currentLine = i + 1;
             for (int j = 0; j < lexemes.length; j++) {
                 if (keywords.contains(lexemes[j])) {
-                    tokens.add(new Token(lexemes[j].toUpperCase(), null, currentLine));
+                    tokens.add(new Token("KEYWORD", lexemes[j].toUpperCase(), currentLine));
                 }
-                else if (operators.contains(lexemes[j]) || punctuations.contains(lexemes[j])) {
-                    tokens.add(new Token(lexemes[j], null, currentLine));
+                else if (operators.contains(lexemes[j])) {
+                    tokens.add(new Token("OPERATOR", lexemes[j], currentLine));
+                }
+                else if (punctuations.contains(lexemes[j])) {
+                    tokens.add(new Token("PUNCTUATOR", lexemes[j], currentLine));
                 }
                 else if (isInteger(lexemes[j])) {
                     tokens.add(new Token("INTEGER", Integer.parseInt(lexemes[j]), currentLine));
@@ -51,9 +56,14 @@ public class LexicalAnalyzer {
                     tokens.add(new Token("REAL", Double.parseDouble(lexemes[j]), currentLine));
                 }
                 else if (isString(lexemes[j])) {
-                    tokens.add(new Token("STRING", lexemes[j], currentLine));
+                    tokens.add(new Token("STRING_LITERAL", lexemes[j], currentLine));
                 }
                 else if (isValidIdentifier(lexemes[j])) {
+                    List<String> acceptedDataTypes = Arrays.asList("BOOL", "CHAR", "INT", "FLOAT", "DOUBLE", "STRING");
+                    if (acceptedDataTypes.contains((String)tokens.getLast().value)) {
+                        declaredVariables.put(lexemes[j], (String)tokens.getLast().value);
+                    }
+
                     tokens.add(new Token("ID", lexemes[j], currentLine));
                 }
                 else {

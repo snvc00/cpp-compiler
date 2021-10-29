@@ -15,8 +15,8 @@ public class SyntaxAnalyzer {
         error = false;
         validTransitions = new HashMap<>();
 
-        String[] dataTypes = new String[]{"VOID", "BOOL", "CHAR", "INT", "FLOAT", "DOUBLE"};
-        String[] literals = new String[]{"TRUE", "FALSE", "STRING", "INTEGER", "REAL"};
+        String[] dataTypes = new String[]{"VOID", "BOOL", "CHAR", "INT", "FLOAT", "DOUBLE", "STRING"};
+        String[] literals = new String[]{"TRUE", "FALSE", "STRING_LITERAL", "INTEGER", "REAL"};
         String[] operators = new String[]{"%", "&&", "!=", "*", "+", "-", "/", "<", "<=", "=", "==", ">", ">=", "||"};
 
         for (String dataType : dataTypes) {
@@ -80,16 +80,16 @@ public class SyntaxAnalyzer {
             if (currentToken.type.equals(")") || currentToken.type.equals("}")) {
                 if (equivalentPunctuation.empty() || !punctuationsPair.get(currentToken.type).equals(equivalentPunctuation.peek().type)) {
                     reportError(currentToken);
-                    return;
                 }
                 else {
                     equivalentPunctuation.pop();
                 }
             }
 
-            if (!validTransitions.get(currentToken.type).contains(nextToken.type)) {
+            String tokenKey = (List.of("KEYWORD", "PUNCTUATOR", "OPERATOR").contains(currentToken.type)) ? (String)currentToken.value : currentToken.type;
+            String nextTokenKey = (List.of("KEYWORD", "PUNCTUATOR", "OPERATOR").contains(nextToken.type)) ? (String)nextToken.value : nextToken.type;
+            if (!validTransitions.get(tokenKey).contains(nextTokenKey)) {
                 reportError(currentToken);
-                return;
             }
         }
 
@@ -97,14 +97,12 @@ public class SyntaxAnalyzer {
         // The common case is one { token in the stack for the unchecked last token }, if is the case do not report and error
         if (!equivalentPunctuation.empty() && !equivalentPunctuation.peek().type.equals("{")) {
             reportError(equivalentPunctuation.peek());
-            return;
         }
 
         // Check if last token (no further transition token) is a valid final token
         Token finalToken = tokens.get(tokens.size() - 1);
-        if (!finalToken.type.equals(";") && !finalToken.type.equals("}")) {
+        if (!finalToken.value.equals(";") && !finalToken.value.equals("}")) {
             reportError(finalToken);
-            return;
         }
     }
 
